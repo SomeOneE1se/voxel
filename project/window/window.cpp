@@ -1,37 +1,53 @@
+/** ############################################################################
+ *  \file   window.h
+ *  \author p@nsk
+ *  \date   10.05.2026
+ *  \brief
+ * _____________________________________________________________________________
+ */
 #include <iostream>
+#include <glad/glad.h>
 #include "window.h"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
+/*
+ ---------------------------------------------------------------------------- */
 
-GLFWwindow *Window::window;
+GLFWwindow *Window::pWindow = nullptr;
+
+/*
+ ---------------------------------------------------------------------------- */
 
 /**
-*******************************************************************************/
+ * @brief Window::initialize
+ * @param width
+ * @param height
+ * @param title
+ * @return
+ ******************************************************************************/
 TInt Window::initialize(
-        TInt width,
-        TInt height,
-        const TChar *title
-){
+    TInt width,
+    TInt height,
+    const TChar *title
+)
+{
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,  3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,  3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,  4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,  6);
     glfwWindowHint(GLFW_OPENGL_PROFILE,  GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-    if (window == nullptr)
+    pWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    if (pWindow == nullptr)
     {
         std::cerr << "Failed to create GLFW Window" << std::endl;
         glfwTerminate();
         return -1;
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(pWindow);
 
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
+    if (!gladLoadGL())
     {
-        std::cerr << "Failed to initialize GLEW" << std::endl;
+        std::cerr << "Failed to load GLAD " << std::endl;
         return -1;
     }
 
@@ -40,30 +56,47 @@ TInt Window::initialize(
 }
 
 /**
-*******************************************************************************/
+ * @brief Window::get_Window
+ * @return
+ ******************************************************************************/
+GLFWwindow * Window::getWindow( void)
+{
+    return pWindow;
+}
+
+/**
+ * @brief Window::isShouldClose
+ * @return
+ ******************************************************************************/
 TBool Window::isShouldClose( void)
 {
-    return glfwWindowShouldClose(window);
+    return glfwWindowShouldClose(pWindow);
 }
 
 /**
-*******************************************************************************/
+ * @brief Window::setShouldClose
+ * @param flag
+ ******************************************************************************/
 void Window::setShouldClose(
-        TBool flag
-){
-    glfwSetWindowShouldClose(window, flag);
+    TBool   flag
+)
+{
+    glfwSetWindowShouldClose(pWindow, flag);
 }
 
 /**
-*******************************************************************************/
+ * @brief Window::swapBuffers
+ ******************************************************************************/
 void Window::swapBuffers( void)
 {
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(pWindow);
 }
 
 /**
-*******************************************************************************/
+ * @brief Window::terminate
+ ******************************************************************************/
 void Window::terminate( void)
 {
+    pWindow = nullptr;
     return glfwTerminate();
 }

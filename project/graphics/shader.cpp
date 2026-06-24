@@ -1,111 +1,146 @@
-#include "shader.h"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-#include <exception>
+/** ############################################################################
+ *  \file   shader.cpp
+ *  \author p@nsk
+ *  \date   10.05.2026
+ *  \brief
+ * _____________________________________________________________________________
+ */
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-/**
-*******************************************************************************/
-Shader::Shader( TUInt32 id) : id(id)
-    {}
+#include "shader.h"
 
 /**
-*******************************************************************************/
+ * @brief Shader::~Shader
+ ******************************************************************************/
 Shader::~Shader( void)
 {
     glDeleteProgram(id);
 }
 
 /**
-*******************************************************************************/
-void Shader::use( void)
+ * @brief Shader::use
+ ******************************************************************************/
+void    Shader::use( void)  const
 {
     glUseProgram(id);
 }
 
 /**
-*******************************************************************************/
-Shader *load_shader(
-        std::string vertexFile,
-        std::string fragmentFile
-){
-    std::string vertexCode;
-    std::string fragmentCode;
+ * @brief Shader::isCompiled
+ * @return
+ ******************************************************************************/
+TBool   Shader::isCompiled( void)   const
+{
+    return compiled;
+}
+
+/**
+ * @brief Shader::createShader
+ * @param source
+ * @param type
+ * @param id
+ * @return
+ ******************************************************************************/
+bool Shader::createShader(
+    const std::string& source,
+    const GLenum type,
+    GLuint &id
+)
+{
+    id = glCreateShader(type);
+    const char* code = source.c_str();
+    glShaderSource(id, 1, &code, nullptr);
+    glCompileShader(id);
+
+    GLint success;
+    glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        GLchar infoLog[1024];
+        glGetShaderInfoLog(id, 1024, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER: Compile time error" << infoLog << std::endl;
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Shader::Shader
+ * @param vertexFile
+ * @param fragmentFile
+ ******************************************************************************/
+Shader::Shader(
+    std::string vertexFile,
+    std::string fragmentFile
+)
+{
     std::ifstream vShaderFile;
     std::ifstream fShaderFile;
 
-    vShaderFile.exceptions(std::ifstream::badbit);
-    fShaderFile.exceptions(std::ifstream::badbit);
-    try {
-        vShaderFile.open(vertexFile);
-        fShaderFile.open(fragmentFile);
+    vShaderFile.exceptions(std::ifstream::failbit);
+    fShaderFile.exceptions(std::ifstream::failbit);
+    vShaderFile.open(vertexFile);
+    fShaderFile.open(fragmentFile);
+
+    std::string vertexCode;
+    std::string fragmentCode;
+
+    try
+    {
         std::stringstream vShaderStream, fShaderStream;
 
         vShaderStream << vShaderFile.rdbuf();
         fShaderStream << fShaderFile.rdbuf();
 
+        vertexCode  = vShaderStream.str();
+        fragmentCode= fShaderStream.str();
+    }
+    catch(std::ifstream::failure &ex)
+    {
+        std::cerr << "SHADER::PROGRAM: Failed to open file" << std::endl;
         vShaderFile.close();
         fShaderFile.close();
+        return;
+    }
 
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
-    }
-    catch(std::ifstream::failure &e)
-    {
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULY_READ" << std::endl;
-        return nullptr;
-    }
-    const GLchar *vShaderCode = vertexCode.c_str();
-    const GLchar *fShaderCode = fragmentCode.c_str();
+    vShaderFile.close();
+    fShaderFile.close();
 
     GLuint  vertex, fragment;
-    GLint   success;
-    GLchar  infoLog[512];
 
-    vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, nullptr);
-    glCompileShader(vertex);
-    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-    if (!success)
+    if (!createShader(vertexCode, GL_VERTEX_SHADER, vertex))
     {
-        glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
-        std::cerr << "SHADER::VERTEX: compilation failed" << std::endl;
-        return nullptr;
+        return;
+    }
+    if (!createShader(fragmentCode, GL_FRAGMENT_SHADER, fragment))
+    {
+        return;
     }
 
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, nullptr);
-    glCompileShader(fragment);
-    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-        std::cerr << "SHADER::FRAGMENT: compilation failed" << std::endl;
-        return nullptr;
-    }
-
-    GLuint id = glCreateProgram();
+    id = glCreateProgram();
     glAttachShader(id, vertex);
     glAttachShader(id, fragment);
     glLinkProgram(id);
 
+    GLint   success;
     glGetProgramiv(id, GL_LINK_STATUS, &success);
     if (!success)
     {
+        GLchar  infoLog[512];
         glGetProgramInfoLog(id, 512, nullptr, infoLog);
         std::cerr << "SHADER::PROGRAM: linking failed" << std::endl;
         std::cerr << infoLog << std::endl;
 
-        glDeleteShader(vertex);
-        glDeleteShader(fragment);
         glDeleteProgram(id);
-        return nullptr;
     }
+    else
+    {
+        compiled = true;
+        dbgprint1("\n shader %d is compiled", id);
+    }
+
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-
-    return new Shader(id);
 }

@@ -1,19 +1,44 @@
+/** ############################################################################
+ *  \file   shader.h
+ *  \author p@nsk
+ *  \date   10.05.2026
+ *  \brief
+ * _____________________________________________________________________________
+ */
 #ifndef SHADER_H
 #define SHADER_H
 
 #include <project.h>
 #include <string>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+/**
+ * @brief The Shader class
+ ******************************************************************************/
 class Shader
 {
-public:
+private:
     TUInt32 id;
-    Shader( TUInt32 id);
-    ~Shader( void);
+    TBool   compiled;
 
-    void use( void);
+    bool    createShader(
+        const std::string& source,
+        const GLenum type,
+        GLuint &id
+    );
+public:
+
+    Shader( std::string vertexFile, std::string fragmentFile);
+   ~Shader( void);
+
+    Shader() = delete;
+    Shader(Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
+
+    TBool   isCompiled()    const;
+    void    use( void)      const;
 };
-
-extern Shader *load_shader(std::string vertexFile, std::string fragmentFile);
 
 #endif // SHADER_H

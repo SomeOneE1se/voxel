@@ -1,139 +1,184 @@
+/** ############################################################################
+ *  \file   events.cpp
+ *  \author p@nsk
+ *  \date   10.05.2026
+ *  \brief
+ * _____________________________________________________________________________
+ */
 #include "events.h"
-#include "GLFW/glfw3.h"
-#include "string.h"
 
-#define _MOUSE_BUTTONS  1024
+/*
+ ---------------------------------------------------------------------------- */
+
+TBool     * Events::keys;
+TUInt32   * Events::frames;
+TUInt32     Events::current         {0};
+TFloat      Events::deltaX          {0};
+TFloat      Events::deltaY          {0};
+TFloat      Events::x               {0};
+TFloat      Events::y               {0};
+TBool       Events::cursor_locked   {0};
+TBool       Events::cursor_started  {0};
+
+/*
+ ---------------------------------------------------------------------------- */
 
 /**
-*******************************************************************************/
-TBool     * Events::_keys;
-TUInt32   * Events::_frames;
-TUInt32     Events::_current        = 0;
-TFloat      Events::deltaX          = 0.0f;
-TFloat      Events::deltaY          = 0.0f;
-TFloat      Events::x               = 0.0f;
-TFloat      Events::y               = 0.0f;
-TBool       Events::_cursor_locked  = false;
-TBool       Events::_cursor_started = false;
-
-
-/**
-*******************************************************************************/
-void cursor_position_callback(
-        GLFWwindow *window,
-        TDouble     xpos,
-        TDouble     ypos
-){
-    if (Events::_cursor_started)
+ * @brief Events::cursorPositionCallback
+ * @param window
+ * @param xpos
+ * @param ypos
+ ******************************************************************************/
+void Events::cursorPositionCallback(
+    GLFWwindow *window,
+    TDouble     xpos,
+    TDouble     ypos
+)
+{
+    if (cursor_started)
     {
-        Events::deltaX += xpos - Events::x;
-        Events::deltaY += ypos - Events::y;
+        deltaX += xpos - x;
+        deltaY += ypos - y;
     }
     else
     {
-        Events::_cursor_started = true;
+        cursor_started = true;
     }
-    Events::x = xpos;
-    Events::y = ypos;
+    x = xpos;
+    y = ypos;
 }
 
 /**
-*******************************************************************************/
-void mouse_button_callback(
-        GLFWwindow *window,
-        TInt button,
-        TInt action,
-        TInt mode
-){
+ * @brief Events::mouseButtonCallback
+ * @param window
+ * @param button
+ * @param action
+ * @param mode
+ ******************************************************************************/
+void Events::mouseButtonCallback(
+    GLFWwindow *pWindow,
+    TInt        button,
+    TInt        action,
+    TInt        mode
+)
+{
     if (action == GLFW_PRESS)
     {
-        Events::_keys[_MOUSE_BUTTONS+button]    = true;
-        Events::_frames[_MOUSE_BUTTONS+button]  = Events::_current;
+        keys[MOUSE_BUTTONS+button]      = true;
+        frames[MOUSE_BUTTONS+button]    = current;
     }
     else if (action == GLFW_RELEASE)
     {
-        Events::_keys[_MOUSE_BUTTONS+button]    = false;
-        Events::_frames[_MOUSE_BUTTONS+button]  = Events::_current;
+        keys[MOUSE_BUTTONS+button]      = false;
+        frames[MOUSE_BUTTONS+button]    = current;
     }
 }
 
 /**
-*******************************************************************************/
-void key_callback(
-        GLFWwindow *window,
-        TInt key,
-        TInt scancode,
-        TInt action,
-        TInt mode
-){
+ * @brief Events::keyCallback
+ * @param window
+ * @param key
+ * @param scancode
+ * @param action
+ * @param mode
+ ******************************************************************************/
+void Events::keyCallback(
+    GLFWwindow *pWindow,
+    TInt        key,
+    TInt        scancode,
+    TInt        action,
+    TInt        mode
+)
+{
     if (action == GLFW_PRESS)
     {
-        Events::_keys[key]  = true;
-        Events::_frames[key]= Events::_current;
+        keys[key]      = true;
+        frames[key]    = current;
     }
     else if (action == GLFW_RELEASE)
     {
-        Events::_keys[key]  = false;
-        Events::_frames[key]= Events::_current;
+        keys[key]      = false;
+        frames[key]    = current;
     }
 }
 
 /**
-*******************************************************************************/
+ * @brief Events::initialize
+ * @return
+ ******************************************************************************/
 TInt Events::initialize( void)
 {
-    GLFWwindow *window = Window::window;
-    _keys   = new TBool[1032];
-    _frames = new TUInt32[1032];
+    GLFWwindow  *pWindow = Window::getWindow();
 
-    memset(_keys, false, 1032 * sizeof(TBool));
-    memset(_frames, 0, 1032 * sizeof(TUInt32));
+    keys   = new TBool  [1032]  ();
+    frames = new TUInt32[1032]  ();
 
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetKeyCallback(pWindow, keyCallback);
+    glfwSetMouseButtonCallback(pWindow, mouseButtonCallback);
+    glfwSetCursorPosCallback(pWindow, cursorPositionCallback);
     return 0;
 }
 
 /**
-*******************************************************************************/
-TBool Events::pressed(TInt keycode)
+ * @brief Events::isPressed
+ * @param keycode
+ * @return
+ ******************************************************************************/
+TBool Events::isPressed(
+    TInt keycode
+)
 {
-    if (keycode < 0 || _MOUSE_BUTTONS <= keycode)
+    if (keycode < 0 || MOUSE_BUTTONS <= keycode)
         return false;
-    return _keys[keycode];
+    return keys[keycode];
 }
 
 /**
-*******************************************************************************/
-TBool Events::jpressed(TInt keycode)
+ * @brief Events::isJPressed
+ * @param keycode
+ * @return
+ ******************************************************************************/
+TBool Events::isJPressed(
+    TInt keycode
+)
 {
-    if (keycode < 0 || _MOUSE_BUTTONS <= keycode)
+    if (keycode < 0 || MOUSE_BUTTONS <= keycode)
         return false;
-    return _keys[keycode] && _frames[keycode] == _current;
+    return keys[keycode] && (frames[keycode] == current);
 }
 
 /**
-*******************************************************************************/
-TBool Events::clicked(TInt button)
+ * @brief Events::isClicked
+ * @param button
+ * @return
+ ******************************************************************************/
+TBool Events::isClicked(
+    TInt button
+)
 {
-    TInt index = _MOUSE_BUTTONS + button;
-    return _keys[index];
+    TInt index = MOUSE_BUTTONS + button;
+    return keys[index];
 }
 
 /**
-*******************************************************************************/
-TBool Events::jclicked(TInt button)
+ * @brief Events::isJClicked
+ * @param button
+ * @return
+ ******************************************************************************/
+TBool Events::isJClicked(
+    TInt button
+)
 {
-    TInt index = _MOUSE_BUTTONS + button;
-    return _keys[index] && _frames[index] == _current;
+    TInt index = MOUSE_BUTTONS + button;
+    return keys[index] && (frames[index] == current);
 }
 
 /**
-*******************************************************************************/
+ * @brief Events::pullEvents
+ ******************************************************************************/
 void Events::pullEvents( void)
 {
-    _current++;
+    current++;
     deltaX = 0.0f;
     deltaY = 0.0f;
     glfwPollEvents();
