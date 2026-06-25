@@ -22,24 +22,18 @@ using mapTexture	= std::map<std::string, Render::Texture::Ptr>;
  ******************************************************************************/
 class Manager
 {
-    std::string resPath;
-
+	std::string resPath;
 	mapShader   MShader;
 	mapTexture  MTexture;
 
 	std::string getFileContent( std::string path) const;
 
 public:
-    Manager(const std::string& path);
-   ~Manager() = default;
-
-    Manager(const Manager& ) = delete;
-    Manager& operator=(const Manager&) = delete;
-    Manager& operator=(Manager&&) = delete;
-    Manager(Manager&&) = delete;
-
-
-
+	Manager( std::string path);
+	Manager( const Manager& )			= delete;
+	Manager( Manager&&)					= delete;
+	Manager& operator=( const Manager&)	= delete;
+	Manager& operator=( Manager&&)		= delete;
 
 	Render::Shader::Ptr loadShader(
 		std::string shaderName,
@@ -47,10 +41,12 @@ public:
 		std::string fragmentPath
 	);
 	Render::Shader::Ptr getShader(std::string shaderName) const;
+
 	Render::Texture::Ptr loadTexture(
 		std::string shaderName,
 		std::string texturePath
 	);
+
 	Render::Texture::Ptr getTexture(std::string textureName) const;
 };
 
