@@ -42,7 +42,6 @@ public:
     std::shared_ptr<Render::Shader> getShader(const std::string shaderName) const;
 
 
-    std::shared_ptr<Render::Texture> getTexture(const std::string textureName) const;
 	Render::Shader::Ptr loadShader(
 		std::string shaderName,
 		std::string vertexPath,
@@ -52,6 +51,7 @@ public:
 		std::string shaderName,
 		std::string texturePath
 	);
+	Render::Texture::Ptr getTexture(std::string textureName) const;
 };
 
 int png_load(const char *file, int *width, int *height);
