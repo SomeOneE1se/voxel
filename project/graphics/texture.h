@@ -10,6 +10,7 @@
 
 #include <project.h>
 #include <string>
+#include <memory>
 
 namespace Render {
 
@@ -23,6 +24,7 @@ class Texture
 	TUInt32	id;
 
 public:
+	using Ptr = std::shared_ptr<Render::Texture>;
 
 	Texture( void)		= delete;
 	Texture( Texture&)	= delete;
