@@ -9,18 +9,20 @@ set(NAME_UNI_LIB	uni_lib)
 set(	SOURCES_MAIN
 	main/main.cpp
 	main/project.h
+	main/constants.h
 )
 
-set(	SOURCES_LOADERS
-#	loaders/png_loading.cpp
-#	loaders/png_loading.h
+set(	SOURCES_MANAGER
+	manager/manager.cpp
+	manager/manager.h
+	manager/png_loading.cpp
 )
 
 set(	SOURCES_GRAPHICS
 	graphics/shader.cpp
 	graphics/shader.h
-#	graphics/texture.cpp
-#	graphics/texture.h
+	graphics/texture.cpp
+	graphics/texture.h
 )
 
 set(	SOURCES_WINDOW
@@ -49,7 +51,7 @@ target_include_directories(${NAME_UNI_LIB}	PUBLIC
 ###############################################################################
 add_executable(${NAME}
 	${SOURCES_MAIN}
-	${SOURCES_LOADERS}
+	${SOURCES_MANAGER}
 	${SOURCES_GRAPHICS}
 	${SOURCES_WINDOW}
 )
@@ -61,9 +63,15 @@ target_link_libraries(${NAME}	PRIVATE	uni_lib)
 
 target_link_libraries(${NAME}	PRIVATE	glad		glfw)
 
+if (NOT UNIX)
+	target_link_libraries(${NAME}	PRIVATE	png_static	zlibstatic)
+else()
+	target_link_libraries(${NAME}	PRIVATE	png)
+endif()
+
 set_target_properties(	${NAME}	PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_custom_command( TARGET ${NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_directory
-					${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${NAME}>)
+					${CMAKE_SOURCE_DIR}/res/resources $<TARGET_FILE_DIR:${NAME}>)

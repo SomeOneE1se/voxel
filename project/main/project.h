@@ -10,12 +10,10 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
+#define 	PROJECT_DBG
+
 #include <uni_base_types.h>
 #include <uni_debug.h>
 
-/**
-*******************************************************************************/
-
-#define 	PROJECT_DBG
 
 #endif/*PROJECT_H*/

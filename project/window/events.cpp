@@ -7,6 +7,9 @@
  */
 #include "events.h"
 
+#define MOUSE_BUTTONS   1024
+#define BUTTONS_COUNT   1032
+
 /*
  ---------------------------------------------------------------------------- */
 

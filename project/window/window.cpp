@@ -39,7 +39,7 @@ TInt Window::initialize(
     pWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
     if (pWindow == nullptr)
     {
-        std::cerr << "Failed to create GLFW Window" << std::endl;
+        std::cerr << "! Failed to create GLFW Window" << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -47,7 +47,7 @@ TInt Window::initialize(
 
     if (!gladLoadGL())
     {
-        std::cerr << "Failed to load GLAD " << std::endl;
+        std::cerr << "! Failed to load GLAD " << std::endl;
         return -1;
     }
 

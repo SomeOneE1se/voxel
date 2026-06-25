@@ -5,11 +5,11 @@
  *  \brief
  * _____________________________________________________________________________
  */
-#include <fstream>
+
 #include <iostream>
-#include <sstream>
 
 #include "shader.h"
+using namespace Render;
 
 /**
  * @brief Shader::~Shader
@@ -60,7 +60,7 @@ bool Shader::createShader(
     {
         GLchar infoLog[1024];
         glGetShaderInfoLog(id, 1024, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER: Compile time error" << infoLog << std::endl;
+        std::cerr << "! ERROR::SHADER: Compile time error" << infoLog << std::endl;
         return false;
     }
     return true;
@@ -72,49 +72,17 @@ bool Shader::createShader(
  * @param fragmentFile
  ******************************************************************************/
 Shader::Shader(
-    std::string vertexFile,
-    std::string fragmentFile
+    const std::string vertexString,
+    const std::string fragmentString
 )
 {
-    std::ifstream vShaderFile;
-    std::ifstream fShaderFile;
-
-    vShaderFile.exceptions(std::ifstream::failbit);
-    fShaderFile.exceptions(std::ifstream::failbit);
-    vShaderFile.open(vertexFile);
-    fShaderFile.open(fragmentFile);
-
-    std::string vertexCode;
-    std::string fragmentCode;
-
-    try
-    {
-        std::stringstream vShaderStream, fShaderStream;
-
-        vShaderStream << vShaderFile.rdbuf();
-        fShaderStream << fShaderFile.rdbuf();
-
-        vertexCode  = vShaderStream.str();
-        fragmentCode= fShaderStream.str();
-    }
-    catch(std::ifstream::failure &ex)
-    {
-        std::cerr << "SHADER::PROGRAM: Failed to open file" << std::endl;
-        vShaderFile.close();
-        fShaderFile.close();
-        return;
-    }
-
-    vShaderFile.close();
-    fShaderFile.close();
-
     GLuint  vertex, fragment;
 
-    if (!createShader(vertexCode, GL_VERTEX_SHADER, vertex))
+    if (!createShader(vertexString, GL_VERTEX_SHADER, vertex))
     {
         return;
     }
-    if (!createShader(fragmentCode, GL_FRAGMENT_SHADER, fragment))
+    if (!createShader(fragmentString, GL_FRAGMENT_SHADER, fragment))
     {
         return;
     }
@@ -130,7 +98,7 @@ Shader::Shader(
     {
         GLchar  infoLog[512];
         glGetProgramInfoLog(id, 512, nullptr, infoLog);
-        std::cerr << "SHADER::PROGRAM: linking failed" << std::endl;
+        std::cerr << "! SHADER::PROGRAM: linking failed" << std::endl;
         std::cerr << infoLog << std::endl;
 
         glDeleteProgram(id);
@@ -138,7 +106,7 @@ Shader::Shader(
     else
     {
         compiled = true;
-        dbgprint1("\n shader %d is compiled", id);
+        dbgprint1("  Shader %d is compiled\n", id);
     }
 
     glDeleteShader(vertex);

@@ -11,10 +11,6 @@
 #include "window.h"
 #include <project.h>
 
-#define MOUSE_BUTTONS   1024
-#define BUTTONS_COUNT   1032
-
-
 /**
  * @brief The Events class
  ******************************************************************************/

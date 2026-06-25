@@ -14,6 +14,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+namespace Render {
 /**
  * @brief The Shader class
  ******************************************************************************/
@@ -30,7 +31,7 @@ private:
     );
 public:
 
-    Shader( std::string vertexFile, std::string fragmentFile);
+    Shader( const std::string vertexString, const std::string fragmentString);
    ~Shader( void);
 
     Shader() = delete;
@@ -41,4 +42,5 @@ public:
     void    use( void)      const;
 };
 
+}; // namespace Render
 #endif // SHADER_H
