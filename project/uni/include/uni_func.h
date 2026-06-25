@@ -9,6 +9,8 @@
 #ifndef UNI_FUNC_H
 #define UNI_FUNC_H
 
+#define UNUSED(__VALUE__) ((void)(__VALUE__))
+
 /*
  * -------------------------------------------------------------------------- */
 
