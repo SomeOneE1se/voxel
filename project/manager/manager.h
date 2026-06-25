@@ -24,10 +24,10 @@ class Manager
 {
     std::string resPath;
 
-    std::string getFileString(const std::string& path) const;
 	mapShader   MShader;
 	mapTexture  MTexture;
 
+	std::string getFileContent( std::string path) const;
 
 public:
     Manager(const std::string& path);

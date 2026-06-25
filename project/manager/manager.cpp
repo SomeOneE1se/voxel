@@ -27,13 +27,13 @@ Manager::Manager(
 }
 
 /**
- * @brief Manager::getFileString
+ * @brief Manager::getFileContent
  * @param path
  * @return
  ******************************************************************************/
-std::string Manager::getFileString(
-    const std::string& path
-) const
+std::string Manager::getFileContent(
+	std::string path
+	) const
 {
     std::fstream file;
     file.open(resPath + "/" + path.c_str(), std::ios::in | std::ios::binary);
