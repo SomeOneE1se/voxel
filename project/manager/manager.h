@@ -39,7 +39,6 @@ public:
     Manager(Manager&&) = delete;
 
 
-    std::shared_ptr<Render::Shader> getShader(const std::string shaderName) const;
 
 
 	Render::Shader::Ptr loadShader(
@@ -47,6 +46,7 @@ public:
 		std::string vertexPath,
 		std::string fragmentPath
 	);
+	Render::Shader::Ptr getShader(std::string shaderName) const;
 	Render::Texture::Ptr loadTexture(
 		std::string shaderName,
 		std::string texturePath
