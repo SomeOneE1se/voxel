@@ -5,9 +5,7 @@
  *  \brief
  * _____________________________________________________________________________
  */
-
-#include <iostream>
-
+#include <stdexcept>
 #include "shader.h"
 using namespace Render;
 
@@ -28,86 +26,69 @@ void    Shader::use( void)  const
 }
 
 /**
- * @brief Shader::isCompiled
- * @return
- ******************************************************************************/
-TBool   Shader::isCompiled( void)   const
-{
-    return compiled;
-}
-
-/**
  * @brief Shader::createShader
  * @param source
  * @param type
  * @param id
  * @return
  ******************************************************************************/
-bool Shader::createShader(
-    const std::string& source,
-    const GLenum type,
-    GLuint &id
-)
+static GLuint	createShader(
+	std::string	source,
+	GLenum		type
+	)
 {
     id = glCreateShader(type);
     const char* code = source.c_str();
     glShaderSource(id, 1, &code, nullptr);
     glCompileShader(id);
 
-    GLint success;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        GLchar infoLog[1024];
-        glGetShaderInfoLog(id, 1024, nullptr, infoLog);
-        std::cerr << "! ERROR::SHADER: Compile time error" << infoLog << std::endl;
-        return false;
-    }
-    return true;
+	GLint	success;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		GLchar	infoLog[1024];
+		glGetShaderInfoLog(id, 1024, nullptr, infoLog);
+		throw std::runtime_error("ERROR::SHADER: Compile time error: " + std::string(infoLog));
+	}
+
+	return id;
 }
 
 /**
  * @brief Shader::Shader
- * @param vertexFile
- * @param fragmentFile
+ * @param vertexPath
+ * @param fragmentPath
  ******************************************************************************/
 Shader::Shader(
-    const std::string vertexString,
-    const std::string fragmentString
-)
+	std::string vertexCode,
+	std::string fragmentCode
+	)
 {
-    GLuint  vertex, fragment;
+	GLuint vertex	= createShader(vertexCode, GL_VERTEX_SHADER);
+	GLuint fragment	= createShader(fragmentCode, GL_FRAGMENT_SHADER);
 
-    if (!createShader(vertexString, GL_VERTEX_SHADER, vertex))
-    {
-        return;
-    }
-    if (!createShader(fragmentString, GL_FRAGMENT_SHADER, fragment))
-    {
-        return;
-    }
+	id = glCreateProgram();
+	glAttachShader(id, vertex);
+	glAttachShader(id, fragment);
+	glLinkProgram(id);
 
-    id = glCreateProgram();
-    glAttachShader(id, vertex);
-    glAttachShader(id, fragment);
-    glLinkProgram(id);
+	GLint	success;
+	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		GLchar	infoLog[512];
+		glGetProgramInfoLog(id, 512, nullptr, infoLog);
 
-    GLint   success;
-    glGetProgramiv(id, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        GLchar  infoLog[512];
-        glGetProgramInfoLog(id, 512, nullptr, infoLog);
-        std::cerr << "! SHADER::PROGRAM: linking failed" << std::endl;
-        std::cerr << infoLog << std::endl;
+		glDeleteProgram(id);
 
-        glDeleteProgram(id);
-    }
-    else
-    {
-        compiled = true;
-        dbgprint1("  Shader %d is compiled\n", id);
-    }
+		throw std::runtime_error("SHADER::PROGRAM: linking failed" + std::string(infoLog));
+	}
+
+	dbgprint1("  Shader %d is compiled\n", id);
+
+	glDeleteShader(vertex);
+	glDeleteShader(fragment);
+}
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);

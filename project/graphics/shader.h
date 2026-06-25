@@ -21,14 +21,8 @@ namespace Render {
 class Shader
 {
 private:
-    TUInt32 id;
-    TBool   compiled;
+	TUInt32 id;
 
-    bool    createShader(
-        const std::string& source,
-        const GLenum type,
-        GLuint &id
-    );
 public:
 
     Shader( const std::string vertexString, const std::string fragmentString);
@@ -38,7 +32,6 @@ public:
     Shader(Shader&) = delete;
     Shader& operator=(const Shader&) = delete;
 
-    TBool   isCompiled()    const;
     void    use( void)      const;
 };
 
