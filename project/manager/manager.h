@@ -39,11 +39,6 @@ public:
     Manager(Manager&&) = delete;
 
 
-    std::shared_ptr<Render::Shader> loadShader(
-        const std::string &shaderName,
-        const std::string &vertex,
-        const std::string &fragment
-    );
     std::shared_ptr<Render::Shader> getShader(const std::string shaderName) const;
 
 
@@ -52,6 +47,11 @@ public:
         const std::string &texture
     );
     std::shared_ptr<Render::Texture> getTexture(const std::string textureName) const;
+	Render::Shader::Ptr loadShader(
+		std::string shaderName,
+		std::string vertexPath,
+		std::string fragmentPath
+	);
 };
 
 int png_load(const char *file, int *width, int *height);
