@@ -42,15 +42,15 @@ public:
     std::shared_ptr<Render::Shader> getShader(const std::string shaderName) const;
 
 
-    std::shared_ptr<Render::Texture> loadTexture(
-        const std::string &shaderName,
-        const std::string &texture
-    );
     std::shared_ptr<Render::Texture> getTexture(const std::string textureName) const;
 	Render::Shader::Ptr loadShader(
 		std::string shaderName,
 		std::string vertexPath,
 		std::string fragmentPath
+	);
+	Render::Texture::Ptr loadTexture(
+		std::string shaderName,
+		std::string texturePath
 	);
 };
 
