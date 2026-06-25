@@ -10,16 +10,12 @@
 
 #include <project.h>
 #include <string>
-#include <memory>
 #include <map>
+#include "graphics/shader.h"
+#include "graphics/texture.h"
 
-namespace Render {
-class Shader;
-class Texture;
-}
-
-typedef std::map<const std::string, std::shared_ptr<Render::Shader>>    shaderMap;
-typedef std::map<const std::string, std::shared_ptr<Render::Texture>>   textureMap;
+using mapShader		= std::map<std::string, Render::Shader::Ptr>;
+using mapTexture	= std::map<std::string, Render::Texture::Ptr>;
 
 /**
  * @brief The Manager class
@@ -29,9 +25,9 @@ class Manager
     std::string resPath;
 
     std::string getFileString(const std::string& path) const;
+	mapShader   MShader;
+	mapTexture  MTexture;
 
-    shaderMap   MShader;
-    textureMap  MTexture;
 
 public:
     Manager(const std::string& path);
