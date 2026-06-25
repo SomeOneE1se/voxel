@@ -10,22 +10,6 @@
 using namespace Render;
 
 /**
- * @brief Shader::~Shader
- ******************************************************************************/
-Shader::~Shader( void)
-{
-    glDeleteProgram(id);
-}
-
-/**
- * @brief Shader::use
- ******************************************************************************/
-void    Shader::use( void)  const
-{
-    glUseProgram(id);
-}
-
-/**
  * @brief Shader::createShader
  * @param source
  * @param type
@@ -37,10 +21,10 @@ static GLuint	createShader(
 	GLenum		type
 	)
 {
-    id = glCreateShader(type);
-    const char* code = source.c_str();
-    glShaderSource(id, 1, &code, nullptr);
-    glCompileShader(id);
+	GLuint		id		= glCreateShader(type);
+	const char*	code	= source.c_str();
+	glShaderSource(id, 1, &code, nullptr);
+	glCompileShader(id);
 
 	GLint	success;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
@@ -90,6 +74,18 @@ Shader::Shader(
 	glDeleteShader(fragment);
 }
 
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
+/**
+ * @brief Shader::~Shader
+ ******************************************************************************/
+Shader::~Shader( void)
+{
+	glDeleteProgram(id);
+}
+
+/**
+ * @brief Shader::use
+ ******************************************************************************/
+void	Shader::use( void)  const
+{
+	glUseProgram(id);
 }

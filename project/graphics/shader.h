@@ -27,14 +27,14 @@ private:
 public:
 	using Ptr = std::shared_ptr<Render::Shader>;
 
-    Shader( const std::string vertexString, const std::string fragmentString);
-   ~Shader( void);
+	Shader( std::string vertexCode, std::string fragmentCode);
+	Shader( void) = delete;
+	Shader( Shader&) = delete;
+	~Shader( void);
 
-    Shader() = delete;
-    Shader(Shader&) = delete;
-    Shader& operator=(const Shader&) = delete;
+	Shader& operator=( const Shader&) = delete;
 
-    void    use( void)      const;
+	void	use( void)	const;
 };
 
 }; // namespace Render
