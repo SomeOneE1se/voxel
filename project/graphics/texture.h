@@ -11,30 +11,28 @@
 #include <project.h>
 #include <string>
 
-namespace Render{
+namespace Render {
 
 /**
  * @brief The Texture class
  ******************************************************************************/
 class Texture
 {
-    TUInt32 id;
-    TInt    width;
-    TInt    height;
-    TBool   loaded;
+	TInt	width;
+	TInt	height;
+	TUInt32	id;
 
 public:
-    Texture(std::string filename);
-   ~Texture();
 
-    Texture()   = delete;
-    Texture(Texture&)   = delete;
-    Texture& operator=(const Texture&)  = delete;
+	Texture( void)		= delete;
+	Texture( Texture&)	= delete;
+	Texture( Texture&&)	= delete;
+	Texture( std::string filename);
+	~Texture( void);
 
-    void    bind    ( void) const;
-    TBool   isLoaded( void) const;
+	Texture& operator=( const Texture&)	= delete;
 
-    int     load_texture(std::string filename);
+	void	bind	( void) const;
 };
 
 }; // namespace Render
