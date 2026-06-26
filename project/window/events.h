@@ -28,28 +28,30 @@ private:
     static  TBool       cursor_started;
 
     static void cursorPositionCallback (
-        GLFWwindow *window,
+        GLFWwindow *pWindow,
         TDouble     xpos,
         TDouble     ypos
     );
 
     static void mouseButtonCallback (
-        GLFWwindow *window,
+        GLFWwindow *pWindow,
         TInt button,
         TInt action,
         TInt mode
     );
 
     static void keyCallback (
-        GLFWwindow *window,
+        GLFWwindow *pWindow,
         TInt key,
         TInt scancode,
         TInt action,
         TInt mode
     );
-    Events() = default;
 
 public:
+	Events( void)	= delete;
+	~Events( void)	= delete;
+
     static  TInt    initialize  ( void);
     static  void    pullEvents  ( void);
     static  TBool   isPressed   ( TInt keycode);

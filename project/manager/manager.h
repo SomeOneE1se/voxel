@@ -10,52 +10,44 @@
 
 #include <project.h>
 #include <string>
-#include <memory>
-#include <map>
+#include "uni_base_types.h"
+#include "graphics/shader.h"
+#include "graphics/texture.h"
 
-namespace Render {
-class Shader;
-class Texture;
-}
-
-typedef std::map<const std::string, std::shared_ptr<Render::Shader>>    shaderMap;
-typedef std::map<const std::string, std::shared_ptr<Render::Texture>>   textureMap;
+using mapShader		= TMap<std::string, Render::Shader::Ptr>;
+using mapTexture	= TMap<std::string, Render::Texture::Ptr>;
 
 /**
  * @brief The Manager class
  ******************************************************************************/
 class Manager
 {
-    std::string resPath;
+	std::string resPath;
+	mapShader   MShader;
+	mapTexture  MTexture;
 
-    std::string getFileString(const std::string& path) const;
-
-    shaderMap   MShader;
-    textureMap  MTexture;
+	std::string getFileContent( std::string_view path) const;
 
 public:
-    Manager(const std::string& path);
-   ~Manager() = default;
+	Manager( const std::string& path);
+	Manager( const Manager&)			= delete;
+	Manager( Manager&&)					= delete;
+	Manager& operator=( const Manager&)	= delete;
+	Manager& operator=( Manager&&)		= delete;
 
-    Manager(const Manager& ) = delete;
-    Manager& operator=(const Manager&) = delete;
-    Manager& operator=(Manager&&) = delete;
-    Manager(Manager&&) = delete;
+	Render::Shader::Ptr loadShader(
+		const std::string& shaderName,
+		std::string_view vertexPath,
+		std::string_view fragmentPath
+	);
+	Render::Shader::Ptr getShader(const std::string&  shaderName) const;
 
+	Render::Texture::Ptr loadTexture(
+		const std::string&  textureName,
+		std::string_view texturePath
+	);
 
-    std::shared_ptr<Render::Shader> loadShader(
-        const std::string &shaderName,
-        const std::string &vertex,
-        const std::string &fragment
-    );
-    std::shared_ptr<Render::Shader> getShader(const std::string shaderName) const;
-
-
-    std::shared_ptr<Render::Texture> loadTexture(
-        const std::string &shaderName,
-        const std::string &texture
-    );
-    std::shared_ptr<Render::Texture> getTexture(const std::string textureName) const;
+	Render::Texture::Ptr getTexture(const std::string&  textureName) const;
 };
 
 int png_load(const char *file, int *width, int *height);

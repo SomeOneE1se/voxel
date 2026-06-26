@@ -18,75 +18,52 @@
  * @param path
  ******************************************************************************/
 Manager::Manager(
-    const std::string& path
+	const std::string& path
 )
 {
-    size_t found = path.find_last_of("/\\");
-    resPath = path.substr(0, found);
-    dbgprint1("  Manager::resPath: %s\n", resPath.c_str());
+	size_t found = path.find_last_of("/\\");
+	resPath = path.substr(0, found);
+	dbgprint1("  Manager::resPath: %s\n", resPath.c_str());
 }
 
 /**
- * @brief Manager::getFileString
+ * @brief Manager::getFileContent
  * @param path
  * @return
  ******************************************************************************/
-std::string Manager::getFileString(
-    const std::string& path
+std::string Manager::getFileContent(
+	std::string_view path
 ) const
 {
-    std::fstream file;
-    file.open(resPath + "/" + path.c_str(), std::ios::in | std::ios::binary);
-    if (!file.is_open())
-    {
-        std::cerr << "Failed to open file: " << path << std::endl;
-        return std::string{};
-    }
+	std::fstream file;
+	file.open(resPath + "/" + path.data(), std::ios::in | std::ios::binary);
+	if (!file.is_open())
+		throw std::runtime_error("Failed to open file: " + std::string(path));
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	return buffer.str();
 }
 
 /**
  * @brief Manager::loadShader
  * @param shaderName
- * @param vertex
- * @param fragment
+ * @param vertexPath
+ * @param fragmentPath
  * @return
  ******************************************************************************/
-std::shared_ptr<Render::Shader> Manager::loadShader (
-    const std::string& shaderName,
-    const std::string& vertex,
-    const std::string& fragment
+Render::Shader::Ptr Manager::loadShader (
+	const std::string& shaderName,
+	std::string_view vertexPath,
+	std::string_view fragmentPath
 )
 {
-    std::string vertexString = getFileString(vertex);
-    if (vertexString.empty())
-    {
-        std::cerr << "No vertex shader!" << std::endl;
-        return nullptr;
-    }
+	std::string vertexCode = getFileContent(vertexPath);
+	std::string fragmentCode = getFileContent(fragmentPath);
 
-    std::string fragmentString = getFileString(fragment);
-    if (fragmentString.empty())
-    {
-        std::cerr << "No fragment shader!" << std::endl;
-        return nullptr;
-    }
-    std::shared_ptr<Render::Shader>& newShader = MShader.emplace(
-        shaderName, std::make_shared<Render::Shader>(vertexString, fragmentString)).first->second;
-    if (newShader->isCompiled())
-    {
-        return newShader;
-    }
-    else
-    {
-        std::cerr << "Cant load shader: \n"
-                  << "Vertex: " << vertex << "\n"
-                  << "Fragment: " << fragment << "\n";
-        return nullptr;
-    }
+	MShader[shaderName] = Render::Shader::create(vertexCode, fragmentCode);
+
+	return MShader[shaderName];
 }
 
 /**
@@ -94,40 +71,31 @@ std::shared_ptr<Render::Shader> Manager::loadShader (
  * @param shaderName
  * @return
  ******************************************************************************/
-std::shared_ptr<Render::Shader> Manager::getShader(
-    const std::string shaderName
+Render::Shader::Ptr Manager::getShader(
+	const std::string& shaderName
 ) const
 {
-    shaderMap::const_iterator it = MShader.find(shaderName);
-    if (it != MShader.end())
-        return it->second;
-    else
-        std::cerr << "Cant find the shader: " << shaderName << std::endl;
-    return nullptr;
+	mapShader::const_iterator it = MShader.find(shaderName);
+	if (it != MShader.end())
+		throw std::runtime_error("Cant find the shader: " + shaderName);
+
+	return it->second;
 }
 
 /**
  * @brief Manager::loadTexture
  * @param textureName
- * @param texture
+ * @param texturePath
  * @return
  ******************************************************************************/
-std::shared_ptr<Render::Texture> Manager::loadTexture (
-    const std::string& textureName,
-    const std::string& texture
+Render::Texture::Ptr Manager::loadTexture (
+	const std::string& textureName,
+	std::string_view texturePath
 )
 {
-    std::shared_ptr<Render::Texture>& newTexture = MTexture.emplace(
-        textureName, std::make_shared<Render::Texture>(texture)).first->second;
-    if (newTexture->isLoaded())
-    {
-        return newTexture;
-    }
-    else
-    {
-        std::cerr << "Cant load Texture: " << texture << std::endl;
-        return nullptr;
-    }
+	MTexture[textureName] = Render::Texture::create(texturePath);
+
+	return MTexture[textureName];
 }
 
 /**
@@ -135,14 +103,13 @@ std::shared_ptr<Render::Texture> Manager::loadTexture (
  * @param textureName
  * @return
  ******************************************************************************/
-std::shared_ptr<Render::Texture> Manager::getTexture(
-    const std::string textureName
+Render::Texture::Ptr Manager::getTexture(
+	const std::string& textureName
 ) const
 {
-    textureMap::const_iterator it = MTexture.find(textureName);
-    if (it != MTexture.end())
-        return it->second;
-    else
-        std::cerr << "Cant find the texture: " << textureName << std::endl;
-    return nullptr;
+	mapTexture::const_iterator it = MTexture.find(textureName);
+	if (it == MTexture.end())
+		throw std::runtime_error("Cant find the texture: " + textureName);
+
+	return it->second;
 }

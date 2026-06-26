@@ -9,32 +9,37 @@
 #define TEXTURE_H
 
 #include <project.h>
-#include <string>
+#include <string_view>
 
-namespace Render{
+#include "uni_base_types.h"
+
+namespace Render {
 
 /**
  * @brief The Texture class
  ******************************************************************************/
 class Texture
 {
-    TUInt32 id;
-    TInt    width;
-    TInt    height;
-    TBool   loaded;
+	TInt	width;
+	TInt	height;
+	TUInt32	id;
+
+	Texture( std::string_view filename);
 
 public:
-    Texture(std::string filename);
-   ~Texture();
+	using Ptr	= TShared<Texture>;
 
-    Texture()   = delete;
-    Texture(Texture&)   = delete;
-    Texture& operator=(const Texture&)  = delete;
+	Texture( void)				= delete;
+	Texture( const Texture&)	= delete;
+	Texture( Texture&&)			= delete;
+	~Texture( void);
 
-    void    bind    ( void) const;
-    TBool   isLoaded( void) const;
+	Texture& operator=( const Texture&)	= delete;
+	Texture& operator=( Texture&&)		= delete;
 
-    int     load_texture(std::string filename);
+	static Texture::Ptr create( std::string_view filename);
+
+	void	bind	( void) const noexcept;
 };
 
 }; // namespace Render

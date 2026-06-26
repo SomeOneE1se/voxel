@@ -9,10 +9,12 @@
 #define SHADER_H
 
 #include <project.h>
-#include <string>
+#include <string_view>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "uni_base_types.h"
 
 namespace Render {
 /**
@@ -21,25 +23,26 @@ namespace Render {
 class Shader
 {
 private:
-    TUInt32 id;
-    TBool   compiled;
+	TUInt32 id;
+	Shader( std::string_view vertexCode, std::string_view fragmentCode);
 
-    bool    createShader(
-        const std::string& source,
-        const GLenum type,
-        GLuint &id
-    );
 public:
+	using Ptr	= TShared<Shader>;
 
-    Shader( const std::string vertexString, const std::string fragmentString);
-   ~Shader( void);
+	Shader( void)			= delete;
+	Shader( const Shader&)	= delete;
+	Shader( Shader&&)		= delete;
+	~Shader( void);
 
-    Shader() = delete;
-    Shader(Shader&) = delete;
-    Shader& operator=(const Shader&) = delete;
+	Shader& operator=( const Shader&)	= delete;
+	Shader& operator=( Shader&&)		= delete;
 
-    TBool   isCompiled()    const;
-    void    use( void)      const;
+	static Shader::Ptr create(
+		std::string_view vertexCode,
+		std::string_view fragmentCode
+	);
+
+	void	use( void) const noexcept;
 };
 
 }; // namespace Render

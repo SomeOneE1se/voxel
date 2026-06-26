@@ -11,6 +11,8 @@
 
 /*
  * -------------------------------------------------------------------------- */
+#include <map>
+#include <memory>
 
 using TBool         = bool;
 using TChar         = char;
@@ -28,6 +30,13 @@ using TUInt32       = unsigned int;
 using TSInt32       = signed int;
 using TUInt64       = unsigned long long;
 using TSInt64       = signed long long;
+
+template <typename Key, typename T>
+using TMap	= std::map<Key, T>;
+
+template <typename T> using TShared	= std::shared_ptr<T>;
+template <typename T> using TUnique	= std::unique_ptr<T>;
+template <typename T> using TWeak	= std::weak_ptr<T>;
 
 /*
  * -------------------------------------------------------------------------- */

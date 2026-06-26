@@ -6,6 +6,7 @@
  * _____________________________________________________________________________
  */
 #include "events.h"
+#include "uni_func.h"
 
 #define MOUSE_BUTTONS   1024
 #define BUTTONS_COUNT   1032
@@ -33,11 +34,12 @@ TBool       Events::cursor_started  {0};
  * @param ypos
  ******************************************************************************/
 void Events::cursorPositionCallback(
-    GLFWwindow *window,
+    GLFWwindow *pWindow,
     TDouble     xpos,
     TDouble     ypos
 )
 {
+    UNUSED(pWindow);
     if (cursor_started)
     {
         deltaX += xpos - x;
@@ -65,6 +67,7 @@ void Events::mouseButtonCallback(
     TInt        mode
 )
 {
+    UNUSED(pWindow);
     if (action == GLFW_PRESS)
     {
         keys[MOUSE_BUTTONS+button]      = true;
@@ -113,8 +116,8 @@ TInt Events::initialize( void)
 {
     GLFWwindow  *pWindow = Window::getWindow();
 
-    keys   = new TBool  [1032]  ();
-    frames = new TUInt32[1032]  ();
+    keys   = new TBool  [BUTTONS_COUNT]  ();
+    frames = new TUInt32[BUTTONS_COUNT]  ();
 
     glfwSetKeyCallback(pWindow, keyCallback);
     glfwSetMouseButtonCallback(pWindow, mouseButtonCallback);
@@ -181,7 +184,7 @@ TBool Events::isJClicked(
  ******************************************************************************/
 void Events::pullEvents( void)
 {
-    current++;
+    ++current;
     deltaX = 0.0f;
     deltaY = 0.0f;
     glfwPollEvents();

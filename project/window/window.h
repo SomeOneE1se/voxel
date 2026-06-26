@@ -17,10 +17,10 @@
 class Window
 {
     static  GLFWwindow* pWindow;
-    Window() = default;
 
 public:
-    Window(const Window&) = delete;
+	Window( void)	= delete;
+	~Window( void)	= delete;
 
     static  TInt    initialize  ( TInt width, TInt height, const TChar *title);
     static  void    terminate   ( void);
