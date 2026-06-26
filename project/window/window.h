@@ -19,9 +19,8 @@ class Window
     static  GLFWwindow* pWindow;
 
 public:
-	Window( void) = delete;
-	Window( const Window&) = delete;
-	Window( Window&&) = delete;
+	Window( void)	= delete;
+	~Window( void)	= delete;
 
     static  TInt    initialize  ( TInt width, TInt height, const TChar *title);
     static  void    terminate   ( void);

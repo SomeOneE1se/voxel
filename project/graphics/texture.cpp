@@ -19,12 +19,12 @@ using namespace Render;
  ******************************************************************************/
 static TUInt32 load_texture(
 	std::string filename,
-	TInt width,
-	TInt height
-	)
+	TInt& width,
+	TInt& height
+)
 {
 	TUInt32 id = png_load(filename.c_str(), &width, &height);
-	if (id == 0)
+	if (id == 0U)
 	{
 		throw std::runtime_error("! Could not load texture " + filename);
 	}

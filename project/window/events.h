@@ -49,9 +49,8 @@ private:
     );
 
 public:
-	Events( void) = delete;
-	Events( const Events&) = delete;
-	Events( Events&&) = delete;
+	Events( void)	= delete;
+	~Events( void)	= delete;
 
     static  TInt    initialize  ( void);
     static  void    pullEvents  ( void);

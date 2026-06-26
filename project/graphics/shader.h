@@ -29,11 +29,13 @@ public:
 	using Ptr	= TShared<Shader>;
 
 	Shader( std::string vertexCode, std::string fragmentCode);
-	Shader( void) = delete;
-	Shader( Shader&) = delete;
+	Shader( void)			= delete;
+	Shader( const Shader&)	= delete;
+	Shader( Shader&&)		= delete;
 	~Shader( void);
 
-	Shader& operator=( const Shader&) = delete;
+	Shader& operator=( const Shader&)	= delete;
+	Shader& operator=( Shader&&)		= delete;
 
 	void	use( void)	const;
 };

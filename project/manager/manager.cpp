@@ -19,7 +19,7 @@
  ******************************************************************************/
 Manager::Manager(
 	std::string path
-	)
+)
 {
 	size_t found = path.find_last_of("/\\");
 	resPath = path.substr(0, found);
@@ -33,7 +33,7 @@ Manager::Manager(
  ******************************************************************************/
 std::string Manager::getFileContent(
 	std::string path
-	) const
+) const
 {
 	std::fstream file;
 	file.open(resPath + "/" + path.c_str(), std::ios::in | std::ios::binary);
@@ -48,15 +48,15 @@ std::string Manager::getFileContent(
 /**
  * @brief Manager::loadShader
  * @param shaderName
- * @param vertex
- * @param fragment
+ * @param vertexPath
+ * @param fragmentPath
  * @return
  ******************************************************************************/
 Render::Shader::Ptr Manager::loadShader (
 	std::string shaderName,
 	std::string vertexPath,
 	std::string fragmentPath
-	)
+)
 {
 	std::string vertexCode = getFileContent(vertexPath);
 	std::string fragmentCode = getFileContent(fragmentPath);
@@ -74,7 +74,7 @@ Render::Shader::Ptr Manager::loadShader (
  ******************************************************************************/
 Render::Shader::Ptr Manager::getShader(
 	std::string shaderName
-	) const
+) const
 {
 	mapShader::const_iterator it = MShader.find(shaderName);
 	if (it != MShader.end())
@@ -86,13 +86,13 @@ Render::Shader::Ptr Manager::getShader(
 /**
  * @brief Manager::loadTexture
  * @param textureName
- * @param texture
+ * @param texturePath
  * @return
  ******************************************************************************/
 Render::Texture::Ptr Manager::loadTexture (
 	std::string textureName,
 	std::string texturePath
-	)
+)
 {
 	MTexture[textureName] = std::make_shared<Render::Texture>(texturePath);
 	Render::Texture::Ptr newTexture = MTexture[textureName];
@@ -107,7 +107,7 @@ Render::Texture::Ptr Manager::loadTexture (
  ******************************************************************************/
 Render::Texture::Ptr Manager::getTexture(
 	std::string textureName
-	) const
+) const
 {
 	mapTexture::const_iterator it = MTexture.find(textureName);
 	if (it == MTexture.end())

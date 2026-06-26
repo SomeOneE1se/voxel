@@ -27,13 +27,14 @@ class Texture
 public:
 	using Ptr	= TShared<Texture>;
 
-	Texture( void)		= delete;
-	Texture( Texture&)	= delete;
-	Texture( Texture&&)	= delete;
 	Texture( std::string filename);
+	Texture( void)				= delete;
+	Texture( const Texture&)	= delete;
+	Texture( Texture&&)			= delete;
 	~Texture( void);
 
 	Texture& operator=( const Texture&)	= delete;
+	Texture& operator=( Texture&&)		= delete;
 
 	void	bind	( void) const;
 };

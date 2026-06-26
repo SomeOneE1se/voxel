@@ -44,10 +44,10 @@ int main(int argc, char** argv)
     {
         try {
             Manager manager(argv[0]);
-            Render::Shader::Ptr pShader = manager.loadShader(  "DefaultShader",
-                                                               "shaders/vertex.glsl",
-                                                               "shaders/fragment.glsl");
-            Render::Texture::Ptr pTexture = manager.loadTexture("Flowers", "textures/texture1.png");
+			Render::Shader::Ptr pShader = manager.loadShader(  "DefaultShader",
+															   "shaders/vertex.glsl",
+															   "shaders/fragment.glsl");
+			Render::Texture::Ptr pTexture = manager.loadTexture("Flowers", "textures/texture1.png");
 
             GLuint VAO  = 0;
             glGenVertexArrays(1, &VAO);
