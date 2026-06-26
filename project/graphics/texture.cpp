@@ -64,7 +64,7 @@ Texture::Ptr Texture::create( std::string filename)
 /**
  * @brief Texture::bind
  ******************************************************************************/
-void	Texture::bind( void) const
+void	Texture::bind( void) const noexcept
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 }

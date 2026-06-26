@@ -42,7 +42,7 @@ public:
 		std::string fragmentCode
 	);
 
-	void	use( void)	const;
+	void	use( void) const noexcept;
 };
 
 }; // namespace Render

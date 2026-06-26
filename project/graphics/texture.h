@@ -39,7 +39,7 @@ public:
 
 	static Texture::Ptr create( std::string filename);
 
-	void	bind	( void) const;
+	void	bind	( void) const noexcept;
 };
 
 }; // namespace Render

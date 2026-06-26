@@ -98,7 +98,7 @@ Shader::~Shader( void)
 /**
  * @brief Shader::use
  ******************************************************************************/
-void	Shader::use( void)  const
+void	Shader::use( void) const noexcept
 {
 	glUseProgram(id);
 }
