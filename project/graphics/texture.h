@@ -10,7 +10,8 @@
 
 #include <project.h>
 #include <string>
-#include <memory>
+
+#include "uni_base_types.h"
 
 namespace Render {
 
@@ -24,7 +25,7 @@ class Texture
 	TUInt32	id;
 
 public:
-	using Ptr = std::shared_ptr<Render::Texture>;
+	using Ptr	= TShared<Texture>;
 
 	Texture( void)		= delete;
 	Texture( Texture&)	= delete;

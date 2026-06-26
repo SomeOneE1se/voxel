@@ -10,10 +10,11 @@
 
 #include <project.h>
 #include <string>
-#include <memory>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "uni_base_types.h"
 
 namespace Render {
 /**
@@ -25,7 +26,7 @@ private:
 	TUInt32 id;
 
 public:
-	using Ptr = std::shared_ptr<Render::Shader>;
+	using Ptr	= TShared<Shader>;
 
 	Shader( std::string vertexCode, std::string fragmentCode);
 	Shader( void) = delete;

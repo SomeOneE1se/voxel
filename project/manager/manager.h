@@ -10,12 +10,12 @@
 
 #include <project.h>
 #include <string>
-#include <map>
+#include "uni_base_types.h"
 #include "graphics/shader.h"
 #include "graphics/texture.h"
 
-using mapShader		= std::map<std::string, Render::Shader::Ptr>;
-using mapTexture	= std::map<std::string, Render::Texture::Ptr>;
+using mapShader		= TMap<std::string, Render::Shader::Ptr>;
+using mapTexture	= TMap<std::string, Render::Texture::Ptr>;
 
 /**
  * @brief The Manager class
