@@ -9,7 +9,7 @@
 #define SHADER_H
 
 #include <project.h>
-#include <string>
+#include <string_view>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -24,7 +24,7 @@ class Shader
 {
 private:
 	TUInt32 id;
-	Shader( std::string vertexCode, std::string fragmentCode);
+	Shader( std::string_view vertexCode, std::string_view fragmentCode);
 
 public:
 	using Ptr	= TShared<Shader>;
@@ -38,8 +38,8 @@ public:
 	Shader& operator=( Shader&&)		= delete;
 
 	static Shader::Ptr create(
-		std::string vertexCode,
-		std::string fragmentCode
+		std::string_view vertexCode,
+		std::string_view fragmentCode
 	);
 
 	void	use( void) const noexcept;

@@ -16,12 +16,12 @@ using namespace Render;
  * @return
  ******************************************************************************/
 static GLuint	createShader(
-	std::string	source,
-	GLenum		type
+	std::string_view	source,
+	GLenum				type
 )
 {
 	GLuint		id		= glCreateShader(type);
-	const char*	code	= source.c_str();
+	const char*	code	= source.data();
 	glShaderSource(id, 1, &code, nullptr);
 	glCompileShader(id);
 
@@ -43,8 +43,8 @@ static GLuint	createShader(
  * @param fragmentCode
  ******************************************************************************/
 Shader::Shader(
-	std::string vertexCode,
-	std::string fragmentCode
+	std::string_view vertexCode,
+	std::string_view fragmentCode
 )
 {
 	GLuint vertex	= createShader(vertexCode, GL_VERTEX_SHADER);
@@ -80,8 +80,8 @@ Shader::Shader(
  * @return
  ******************************************************************************/
 Shader::Ptr Shader::create(
-	std::string vertexCode,
-	std::string fragmentCode
+	std::string_view vertexCode,
+	std::string_view fragmentCode
 )
 {
 	return Shader::Ptr(new Shader{vertexCode, fragmentCode});

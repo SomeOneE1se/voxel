@@ -18,7 +18,7 @@
  * @param path
  ******************************************************************************/
 Manager::Manager(
-	std::string path
+	const std::string& path
 )
 {
 	size_t found = path.find_last_of("/\\");
@@ -32,13 +32,13 @@ Manager::Manager(
  * @return
  ******************************************************************************/
 std::string Manager::getFileContent(
-	std::string path
+	std::string_view path
 ) const
 {
 	std::fstream file;
-	file.open(resPath + "/" + path.c_str(), std::ios::in | std::ios::binary);
+	file.open(resPath + "/" + path.data(), std::ios::in | std::ios::binary);
 	if (!file.is_open())
-		throw std::runtime_error("Failed to open file: " + path);
+		throw std::runtime_error("Failed to open file: " + std::string(path));
 
 	std::stringstream buffer;
 	buffer << file.rdbuf();
@@ -53,9 +53,9 @@ std::string Manager::getFileContent(
  * @return
  ******************************************************************************/
 Render::Shader::Ptr Manager::loadShader (
-	std::string shaderName,
-	std::string vertexPath,
-	std::string fragmentPath
+	const std::string& shaderName,
+	std::string_view vertexPath,
+	std::string_view fragmentPath
 )
 {
 	std::string vertexCode = getFileContent(vertexPath);
@@ -72,7 +72,7 @@ Render::Shader::Ptr Manager::loadShader (
  * @return
  ******************************************************************************/
 Render::Shader::Ptr Manager::getShader(
-	std::string shaderName
+	const std::string& shaderName
 ) const
 {
 	mapShader::const_iterator it = MShader.find(shaderName);
@@ -89,8 +89,8 @@ Render::Shader::Ptr Manager::getShader(
  * @return
  ******************************************************************************/
 Render::Texture::Ptr Manager::loadTexture (
-	std::string textureName,
-	std::string texturePath
+	const std::string& textureName,
+	std::string_view texturePath
 )
 {
 	MTexture[textureName] = Render::Texture::create(texturePath);
@@ -104,7 +104,7 @@ Render::Texture::Ptr Manager::loadTexture (
  * @return
  ******************************************************************************/
 Render::Texture::Ptr Manager::getTexture(
-	std::string textureName
+	const std::string& textureName
 ) const
 {
 	mapTexture::const_iterator it = MTexture.find(textureName);

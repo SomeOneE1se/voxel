@@ -26,28 +26,28 @@ class Manager
 	mapShader   MShader;
 	mapTexture  MTexture;
 
-	std::string getFileContent( std::string path) const;
+	std::string getFileContent( std::string_view path) const;
 
 public:
-	Manager( std::string path);
-	Manager( const Manager& )			= delete;
+	Manager( const std::string& path);
+	Manager( const Manager&)			= delete;
 	Manager( Manager&&)					= delete;
 	Manager& operator=( const Manager&)	= delete;
 	Manager& operator=( Manager&&)		= delete;
 
 	Render::Shader::Ptr loadShader(
-		std::string shaderName,
-		std::string vertexPath,
-		std::string fragmentPath
+		const std::string& shaderName,
+		std::string_view vertexPath,
+		std::string_view fragmentPath
 	);
-	Render::Shader::Ptr getShader(std::string shaderName) const;
+	Render::Shader::Ptr getShader(const std::string&  shaderName) const;
 
 	Render::Texture::Ptr loadTexture(
-		std::string shaderName,
-		std::string texturePath
+		const std::string&  textureName,
+		std::string_view texturePath
 	);
 
-	Render::Texture::Ptr getTexture(std::string textureName) const;
+	Render::Texture::Ptr getTexture(const std::string&  textureName) const;
 };
 
 int png_load(const char *file, int *width, int *height);

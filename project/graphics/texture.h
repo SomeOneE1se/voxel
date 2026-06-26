@@ -9,7 +9,7 @@
 #define TEXTURE_H
 
 #include <project.h>
-#include <string>
+#include <string_view>
 
 #include "uni_base_types.h"
 
@@ -24,7 +24,7 @@ class Texture
 	TInt	height;
 	TUInt32	id;
 
-	Texture( std::string filename);
+	Texture( std::string_view filename);
 
 public:
 	using Ptr	= TShared<Texture>;
@@ -37,7 +37,7 @@ public:
 	Texture& operator=( const Texture&)	= delete;
 	Texture& operator=( Texture&&)		= delete;
 
-	static Texture::Ptr create( std::string filename);
+	static Texture::Ptr create( std::string_view filename);
 
 	void	bind	( void) const noexcept;
 };
