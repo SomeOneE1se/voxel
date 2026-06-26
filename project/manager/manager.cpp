@@ -61,10 +61,9 @@ Render::Shader::Ptr Manager::loadShader (
 	std::string vertexCode = getFileContent(vertexPath);
 	std::string fragmentCode = getFileContent(fragmentPath);
 
-	MShader[shaderName] = std::make_shared<Render::Shader>(vertexCode, fragmentCode);
-	Render::Shader::Ptr newShader = MShader[shaderName];
+	MShader[shaderName] = Render::Shader::create(vertexCode, fragmentCode);
 
-	return newShader;
+	return MShader[shaderName];
 }
 
 /**
@@ -94,10 +93,9 @@ Render::Texture::Ptr Manager::loadTexture (
 	std::string texturePath
 )
 {
-	MTexture[textureName] = std::make_shared<Render::Texture>(texturePath);
-	Render::Texture::Ptr newTexture = MTexture[textureName];
+	MTexture[textureName] = Render::Texture::create(texturePath);
 
-	return newTexture;
+	return MTexture[textureName];
 }
 
 /**

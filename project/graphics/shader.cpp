@@ -74,6 +74,20 @@ Shader::Shader(
 }
 
 /**
+ * @brief Shader::create
+ * @param vertexCode
+ * @param fragmentCode
+ * @return
+ ******************************************************************************/
+Shader::Ptr Shader::create(
+	std::string vertexCode,
+	std::string fragmentCode
+)
+{
+	return Shader::Ptr(new Shader{vertexCode, fragmentCode});
+}
+
+/**
  * @brief Shader::~Shader
  ******************************************************************************/
 Shader::~Shader( void)

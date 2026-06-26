@@ -24,11 +24,11 @@ class Shader
 {
 private:
 	TUInt32 id;
+	Shader( std::string vertexCode, std::string fragmentCode);
 
 public:
 	using Ptr	= TShared<Shader>;
 
-	Shader( std::string vertexCode, std::string fragmentCode);
 	Shader( void)			= delete;
 	Shader( const Shader&)	= delete;
 	Shader( Shader&&)		= delete;
@@ -36,6 +36,11 @@ public:
 
 	Shader& operator=( const Shader&)	= delete;
 	Shader& operator=( Shader&&)		= delete;
+
+	static Shader::Ptr create(
+		std::string vertexCode,
+		std::string fragmentCode
+	);
 
 	void	use( void)	const;
 };

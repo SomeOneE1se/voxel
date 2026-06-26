@@ -24,10 +24,11 @@ class Texture
 	TInt	height;
 	TUInt32	id;
 
+	Texture( std::string filename);
+
 public:
 	using Ptr	= TShared<Texture>;
 
-	Texture( std::string filename);
 	Texture( void)				= delete;
 	Texture( const Texture&)	= delete;
 	Texture( Texture&&)			= delete;
@@ -35,6 +36,8 @@ public:
 
 	Texture& operator=( const Texture&)	= delete;
 	Texture& operator=( Texture&&)		= delete;
+
+	static Texture::Ptr create( std::string filename);
 
 	void	bind	( void) const;
 };

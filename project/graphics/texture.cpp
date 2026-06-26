@@ -52,6 +52,16 @@ Texture::~Texture()
 }
 
 /**
+ * @brief Texture::create
+ * @param filename
+ * @return
+ ******************************************************************************/
+Texture::Ptr Texture::create( std::string filename)
+{
+	return Texture::Ptr(new Texture{filename});
+}
+
+/**
  * @brief Texture::bind
  ******************************************************************************/
 void	Texture::bind( void) const
